@@ -1,0 +1,15 @@
+{
+  "name": "@dadoudidou/liteevent",
+  "version": "0.1.0",
+  "description": "",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "author": "Dadoudidou",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^3.3.4000"
+  }
+}
