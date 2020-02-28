@@ -1,16 +1,18 @@
 export interface ILiteEvent<T> {
-    on(handler: { (data?: T): void }) : void;
-    off(handler: { (data?: T): void }) : void;
+    on(handler: LiteEventHandler<T>) : void;
+    off(handler: LiteEventHandler<T>) : void;
 }
 
-export class LiteEvent<T> implements ILiteEvent<T> {
-    private handlers: { (data?: T): void; }[] = [];
+export type LiteEventHandler<T> = (data?: T) => void
 
-    public on(handler: { (data?: T): void }) : void {
+export class LiteEvent<T = any> implements ILiteEvent<T> {
+    private handlers: LiteEventHandler<T>[] = [];
+
+    public on(handler: LiteEventHandler<T>) : void {
         this.handlers.push(handler);
     }
 
-    public off(handler: { (data?: T): void }) : void {
+    public off(handler: LiteEventHandler<T>) : void {
         this.handlers = this.handlers.filter(h => h !== handler);
     }
 
@@ -20,5 +22,36 @@ export class LiteEvent<T> implements ILiteEvent<T> {
 
     public expose() : ILiteEvent<T> {
         return this;
+    }
+}
+
+export type LiteEventList = {
+    [key: string]: any | undefined
+}
+
+export class LiteEventManager<T extends LiteEventList> {
+    private events: { [key: string]: LiteEvent } = {};
+    
+    add<K extends keyof T>(eventName: K){
+        this.events[eventName as string] = new LiteEvent()
+    }
+    remove<K extends keyof T>(eventName: K){
+        (this.events[eventName as string] as any) = undefined;
+    }
+    on<K extends keyof T>(eventName: K, handler: LiteEventHandler<T[K]>){
+        if(this.events[eventName as string]){
+            this.events[eventName as string].on(handler);
+        }
+    }
+    off<K extends keyof T>(eventName: K, handler: LiteEventHandler<T[K]>){
+        if(this.events[eventName as string]){
+            this.events[eventName as string].off(handler);
+        }
+    }
+    trigger<K extends keyof T>(eventName: K): LiteEventHandler<T[K]>{
+        if(this.events[eventName as string]){
+            return this.events[eventName as string].trigger;
+        }
+        return () => {}
     }
 }
