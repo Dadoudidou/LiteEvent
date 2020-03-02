@@ -56,7 +56,6 @@ export class LiteEventManager<T extends LiteEventList> {
     }
     trigger<K extends keyof T>(eventName: K): LiteEventHandler<T[K]>{
         if(this.events[eventName as string]){
-            console.log(this.events[eventName as string]);
             return this.events[eventName as string].trigger;
         }
         return () => {}
