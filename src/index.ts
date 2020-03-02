@@ -7,6 +7,12 @@ export type LiteEventHandler<T> = (data?: T) => void
 
 export class LiteEvent<T = any> implements ILiteEvent<T> {
     private handlers: LiteEventHandler<T>[] = [];
+    constructor(){
+        this.on = this.on.bind(this);
+        this.off = this.off.bind(this);
+        this.expose = this.expose.bind(this);
+        this.trigger = this.trigger.bind(this);
+    }
 
     public on(handler: LiteEventHandler<T>) : void {
         this.handlers.push(handler);
@@ -50,6 +56,7 @@ export class LiteEventManager<T extends LiteEventList> {
     }
     trigger<K extends keyof T>(eventName: K): LiteEventHandler<T[K]>{
         if(this.events[eventName as string]){
+            console.log(this.events[eventName as string]);
             return this.events[eventName as string].trigger;
         }
         return () => {}

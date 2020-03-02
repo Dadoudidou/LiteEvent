@@ -5,6 +5,7 @@ export interface ILiteEvent<T> {
 export declare type LiteEventHandler<T> = (data?: T) => void;
 export declare class LiteEvent<T = any> implements ILiteEvent<T> {
     private handlers;
+    constructor();
     on(handler: LiteEventHandler<T>): void;
     off(handler: LiteEventHandler<T>): void;
     trigger(data?: T): void;
